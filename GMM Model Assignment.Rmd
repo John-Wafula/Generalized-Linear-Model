@@ -1,0 +1,75 @@
+---
+title: "GMM MODEL ASSIGNMENT"
+output: 
+  html_document: 
+    fig_width: 10
+---
+
+Data was loaded into STATA and the following models were produced
+![MOdel 1](C:/Users/Admin/Pictures/st1.PNG)
+
+Model 2
+![MOdel 2](C:/Users/Admin/Pictures/st2.PNG)
+
+Model 3
+![MOdel 3](C:/Users/Admin/Pictures/st3.PNG)
+
+MOdel 4
+![MOdel 4](C:/Users/Admin/Pictures/st4.PNG)
+
+The data was exported from the STATA environment into the computer 
+
+```{r}
+library(haven)
+GMMA_data_STATA <- read_dta("C:/Users/Admin/Desktop/GMMA data STATA.dta")
+head(GMMA_data_STATA)
+```
+
+We did a little bit of data cleaning before preceeding tho create the models
+
+```{r}
+library(gmm)
+data(Finance)
+ f1 <- Finance[1:232, "rm"]
+ f2 <- Finance[1:232, "hml"]
+ f3 <- Finance[1:232, "smb"]
+ f4<-Finance[1:232,"NHP"]
+ f5<-Finance[1:232,"TDW"]
+ f6<-Finance[1:232,"AA"]
+ f7<-Finance[1:232,"EBF"]
+ y <- Finance[1:232,"WMK"]
+ 
+ 
+ GMMA_data_STATA$High_Tech_TCI<-y
+GMMA_data_STATA$GDP_per_capita<-f1
+GMMA_data_STATA$GDP_product<-f2
+GMMA_data_STATA$distance<-f3
+GMMA_data_STATA$Distance_between_major_ports<-f4
+GMMA_data_STATA$Free_Trade_Agreement<-f5
+GMMA_data_STATA$Inward_FDI_stock__of_GDP<-f6
+GMMA_data_STATA$Outward_FDI_stock__of_GDP<-f7
+```
+
+The two models 
+
+```{r}
+library(gmm)
+GMM_Model_1 <- gmm(High_Tech_TCI ~ GDP_per_capita + GDP_product +distance+Distance_between_major_ports+Free_Trade_Agreement+Inward_FDI_stock__of_GDP, ~ GDP_per_capita + GDP_product + distance+Distance_between_major_ports+Free_Trade_Agreement+Inward_FDI_stock__of_GDP,data = GMMA_data_STATA, eqConst = matrix(c(1,2,0,1),2,2))
+
+GMM_Model_1
+
+summary(GMM_Model_1)
+
+plot(GMM_Model_1)
+
+GMM_model_2<-gmm(High_Tech_TCI~GDP_per_capita+GDP_product+distance+Distance_between_major_ports+Free_Trade_Agreement+Outward_FDI_stock__of_GDP,~ GDP_per_capita + GDP_product + distance+Distance_between_major_ports+Free_Trade_Agreement+Outward_FDI_stock__of_GDP,data = GMMA_data_STATA, eqConst = matrix(c(1,2,0,1),2,2)) 
+
+GMM_model_2
+
+summary(GMM_model_2)
+
+plot(GMM_model_2)
+```
+
+?
+
